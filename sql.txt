@@ -1,0 +1,80 @@
+CREATE TABLE `categories` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `clients` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) NOT NULL,
+  `Address` varchar(45) NOT NULL,
+  `City` varchar(45) NOT NULL,
+  `Zip` varchar(45) NOT NULL,
+  `Country` varchar(45) NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `employees` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) NOT NULL,
+  `Username` varchar(45) NOT NULL,
+  `HoursPerWeek` double NOT NULL,
+  `Email` varchar(45) NOT NULL,
+  `Status` varchar(45) NOT NULL,
+  `Role` varchar(45) NOT NULL,
+  `Password` varchar(512) NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `employeesonprojects` (
+  `ProjectsId` int NOT NULL,
+  `EmployeesId` int NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`ProjectsId`,`EmployeesId`),
+  KEY `idEmployees` (`EmployeesId`),
+  CONSTRAINT `idEmployees` FOREIGN KEY (`EmployeesId`) REFERENCES `employees` (`Id`),
+  CONSTRAINT `idProjects` FOREIGN KEY (`ProjectsId`) REFERENCES `projects` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `projects` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) NOT NULL,
+  `Description` varchar(45) NOT NULL,
+  `Status` varchar(45) DEFAULT NULL,
+  `LeadId` int NOT NULL,
+  `ClientId` int NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Lead_idx` (`LeadId`),
+  KEY `Clients_idx` (`ClientId`),
+  CONSTRAINT `Clients` FOREIGN KEY (`ClientId`) REFERENCES `clients` (`Id`),
+  CONSTRAINT `Lead` FOREIGN KEY (`LeadId`) REFERENCES `employees` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `records` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `Description` varchar(45) DEFAULT NULL,
+  `Hours` double NOT NULL,
+  `Overtime` double DEFAULT NULL,
+  `Date` datetime NOT NULL,
+  `ProjectsId` int NOT NULL,
+  `CategoriesId` int NOT NULL,
+  `EmployeesId` int NOT NULL,
+  `DeleteDate` datetime DEFAULT NULL,
+  `LastUpdateDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Projects_Id_idx` (`ProjectsId`),
+  KEY `Categories_Id_idx` (`CategoriesId`),
+  KEY `Employees_Id_idx` (`EmployeesId`),
+  CONSTRAINT `Categories_Id` FOREIGN KEY (`CategoriesId`) REFERENCES `categories` (`Id`),
+  CONSTRAINT `Employees_Id` FOREIGN KEY (`EmployeesId`) REFERENCES `employees` (`Id`),
+  CONSTRAINT `Projects_Id` FOREIGN KEY (`ProjectsId`) REFERENCES `projects` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
